@@ -1,6 +1,6 @@
-# Gridsome Blog Starter
+# sazak.io
 
-> A simple, hackable & minimalistic starter for Gridsome that uses Markdown for content.
+> My personal website using Gridsome that uses Markdown for content.
 
 ## Features
 - Beautiful and simple design.
@@ -11,19 +11,18 @@
 - 100, 100, 100, 100 score on Google Lighthouse.
 - Uses same front-matter fields as Dev.to.
 
-## Demo URL
+## Producion URL
 
-https://gridsome-starter-blog.netlify.com
+https://sazak.io
 
 ## Install
 
-### 1. Install Gridsome CLI tool if you don't have
+### 1. Install required node packages
 
-`npm install --global @gridsome/cli`
+`yarn install`
 
-### 2. Install this starter
+### 2. Build or run development server
 
-1. `gridsome create my-gridsome-site https://github.com/gridsome/gridsome-starter-blog.git`
-2. `cd my-gridsome-site` to open folder
-3. `gridsome develop` to start local dev server at `http://localhost:8080`
-4. Happy coding 🎉🙌
+1. `yarn run build` to build the entire project to deployment-ready code
+2. `yarn run develop` to start local dev server at `http://localhost:8080`
+3. Happy coding 🎉🙌
