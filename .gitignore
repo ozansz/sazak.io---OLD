@@ -1,0 +1,15 @@
+.DS_Store
+Thumbs.db
+db.json
+*.log
+node_modules/
+public/
+.deploy*/
+src/_drafts
+package-lock.json
+_other/
+.csr-cert.key.txt
+.csr-secret.key.txt
+.csr.txt
+.well-known/
+dist/
