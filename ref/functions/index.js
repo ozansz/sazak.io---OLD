@@ -30,18 +30,17 @@ exports.retrieveLink = functions.https.onRequest((request, response) => {
 
     ref.child(request.query.code).once('value', (snapshot) => {
         if (snapshot.exists()) {
-            var link = snapshot.val().link
-            var visit_count = snapshot.val().visit_count
-
             ref.child(request.query.code).set({
-                link: link,
-                visit_count: visit_count + 1
+                link: snapshot.val().link,
+                visit_count: snapshot.val().visit_count + 1,
+                date_added: snapshot.val().date_added,
+                last_visited: new Date()
             })
 
             response.set('Access-Control-Allow-Origin', '*');
             response.json({
                 'code': request.query.code,
-                'link': link
+                'link': snapshot.val().link
             })
         } else {
             response.set('Access-Control-Allow-Origin', '*');
@@ -66,7 +65,9 @@ exports.generateCode = functions.https.onRequest((request, response) => {
     
     ref.child(code).set({
         link: request.query.link,
-        visit_count: 0
+        visit_count: 0,
+        date_added: new Date(),
+        last_visited: new Date()
     })
 
     response.set('Access-Control-Allow-Origin', '*');
