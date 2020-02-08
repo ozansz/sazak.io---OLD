@@ -20,7 +20,9 @@ export default {
 
         this.$root.$data.$api.retrieveLink().get('/', {params: {code: this.$route.params.code}})
             .then((res) => {
-                if (res.data.link === undefined) {
+                var link = res.data.link
+
+                if (link === undefined) {
                     vm.link_inactive = true
 
                     setTimeout(() => {
@@ -30,7 +32,11 @@ export default {
                     return
                 }
 
-                window.location = res.data.link
+                if (!link.startsWith('http://') || !link.startsWith('https://')) {
+                    window.location = 'http://' + link
+                } else {
+                    window.location = link
+                }
             })
             .catch((err) => {
                 if (err.response) {
