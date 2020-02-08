@@ -30,10 +30,18 @@ exports.retrieveLink = functions.https.onRequest((request, response) => {
 
     ref.child(request.query.code).once('value', (snapshot) => {
         if (snapshot.exists()) {
+            var link = snapshot.val().link
+            var visit_count = snapshot.val().visit_count
+
+            ref.child(request.query.code).set({
+                link: link,
+                visit_count: visit_count + 1
+            })
+
             response.set('Access-Control-Allow-Origin', '*');
             response.json({
                 'code': request.query.code,
-                'link': snapshot.val()
+                'link': link
             })
         } else {
             response.set('Access-Control-Allow-Origin', '*');
@@ -56,7 +64,10 @@ exports.generateCode = functions.https.onRequest((request, response) => {
 
     var code = utils.getRandomID()
     
-    ref.child(code).set(request.query.link)
+    ref.child(code).set({
+        link: request.query.link,
+        visit_count: 0
+    })
 
     response.set('Access-Control-Allow-Origin', '*');
     response.json({
