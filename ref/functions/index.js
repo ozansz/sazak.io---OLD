@@ -34,7 +34,7 @@ exports.retrieveLink = functions.https.onRequest((request, response) => {
                 link: snapshot.val().link,
                 visit_count: snapshot.val().visit_count + 1,
                 date_added: snapshot.val().date_added,
-                last_visited: new Date()
+                last_visited: new Date().toString()
             })
 
             response.set('Access-Control-Allow-Origin', '*');
@@ -66,8 +66,8 @@ exports.generateCode = functions.https.onRequest((request, response) => {
     ref.child(code).set({
         link: request.query.link,
         visit_count: 0,
-        date_added: new Date(),
-        last_visited: new Date()
+        date_added: new Date().toString(),
+        last_visited: new Date().toString()
     })
 
     response.set('Access-Control-Allow-Origin', '*');
