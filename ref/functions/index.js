@@ -20,6 +20,14 @@ exports.retrieveLink = functions.https.onRequest((request, response) => {
         return
     }
 
+    if (request.query.code.includes('.') || request.query.code.includes('#') || request.query.code.includes('$') || request.query.code.includes('[') || request.query.code.includes(']')) {
+        response.set('Access-Control-Allow-Origin', '*');
+        response.json({
+            'error': 'invcode'
+        })
+        return
+    }
+
     ref.child(request.query.code).once('value', (snapshot) => {
         if (snapshot.exists()) {
             response.set('Access-Control-Allow-Origin', '*');
