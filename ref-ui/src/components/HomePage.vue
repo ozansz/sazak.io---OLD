@@ -2,14 +2,17 @@
     <div id="HomePage">
         <div class="HomePage__title">ref.sazak.io</div>
         <div class="HomePage__desc">Firebase-powered URL shortener service</div>
-        <div v-if="short_link_code === ''" style="width: 100%;">
+        <div v-show="short_link_code === ''" style="width: 100%;">
             <input class="HomePage__link-input" placeholder="Enter the link here..." type="url" v-model="link" />
             <button class="HomePage__btn" @click="generate_code(link)">Shorten</button>
         </div>
-        <div v-if="short_link_code !== ''">
+        <div v-show="short_link_code !== ''">
             <hr>
-            <div class="HomePage__link">ref.sazak.io/{{short_link_code}}</div>
-            <button class="HomePage__btn" @click="short_link_code = ''; link = ''">Go Back</button>
+            <div class="HomePage__link" id="link-str">ref.sazak.io/{{short_link_code}}</div>
+            <div>
+                <button class="HomePage__btn" @click="short_link_code = ''; link = ''">Go Back</button>
+                <button class="HomePage__btn" @click="copy_to_clipboard('ref.sazak.io/'+short_link_code)">Copy to Clipboard</button>
+            </div>
         </div>
     </div>
 </template>
@@ -40,7 +43,7 @@ export default {
 
             this.$root.$data.$api.generateCode().get('/', {params: {link: link}})
                 .then((res) => {
-                    vm.short_link_code = res.code
+                    vm.short_link_code = res.data.code
                 })
                 .catch((err) => {
                     if (err.response) {
@@ -50,6 +53,39 @@ export default {
                         console.log(err)
                     }
                 })
+        },
+        copy_to_clipboard(text) {
+            if (!navigator.clipboard) {
+                this.fallbackCopyTextToClipboard(text);
+                return;
+            }
+            navigator.clipboard.writeText(text).then(function() {
+                alert("Copied the short link to the clipboard!")
+            }, function(err) {
+                alert('Could not copy text: ', err)
+            });
+        },
+        fallbackCopyTextToClipboard(text) {
+            var textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position="fixed";  //avoid scrolling to bottom
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+
+            try {
+                var successful = document.execCommand('copy');
+
+                if (successful) {
+                    alert("Copied the short link to the clipboard!")
+                } else {
+                    alert('Could not copy text: ', err)
+                }
+            } catch (err) {
+                alert('Oops, unable to copy', err);
+            }
+
+            document.body.removeChild(textArea);
         }
     }
 }

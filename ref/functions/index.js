@@ -1,7 +1,7 @@
 const functions = require('firebase-functions');
 var admin = require('firebase-admin');
 
-const cors = require('cors')({origin: true});
+//const cors = require('cors')({origin: true});
 
 const utils = require('./utils')
 
@@ -18,6 +18,8 @@ exports.retrieveLink = functions.https.onRequest((request, response) => {
         })
         return
     }
+
+    response.set('Access-Control-Allow-Origin', '*');
 
     ref.child(request.query.code).once('value', (snapshot) => {
         if (snapshot.exists()) {
@@ -42,12 +44,11 @@ exports.generateCode = functions.https.onRequest((request, response) => {
         return
     }
 
-    console.log('generateCode will start now')
-
     var code = utils.getRandomID()
     
     ref.child(code).set(request.query.link)
 
+    response.set('Access-Control-Allow-Origin', '*');
     response.json({
         'code': code,
         'link': request.query.link
