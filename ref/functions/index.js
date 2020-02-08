@@ -3,25 +3,10 @@ var admin = require('firebase-admin');
 
 const utils = require('./utils')
 
-var app = admin.initializeApp();
+admin.initializeApp();
 
-// Create and Deploy Your First Cloud Functions
-// https://firebase.google.com/docs/functions/write-firebase-functions
-
-genCode = () => {
-    var _code = undefined
-
-    while (true) {
-        _code = utils.getRandomID()
-        console.log('==> trying code:', _code)
-
-        admin.database().ref().child(_code).once('value', (snapshot) => {
-            if (!snapshot.exists()) {
-                return _code
-            }
-        })
-    }
-}
+var db = admin.database()
+var ref = db.ref('links')
 
 exports.retrieveLink = functions.https.onRequest((request, response) => {
     if (request.query.code === undefined) {
@@ -32,7 +17,7 @@ exports.retrieveLink = functions.https.onRequest((request, response) => {
         return
     }
 
-    admin.database().ref().child(request.query.code).once('value', (snapshot) => {
+    ref.child(request.query.code).once('value', (snapshot) => {
         if (snapshot.exists()) {
             response.json({
                 'code': request.query.code,
@@ -46,7 +31,7 @@ exports.retrieveLink = functions.https.onRequest((request, response) => {
     })
 })
 
-exports.generateCode = functions.https.onRequest(async (request, response) => {
+exports.generateCode = functions.https.onRequest((request, response) => {
     if (request.query.link === undefined) {
         response.json({
             'error': 'field',
@@ -55,11 +40,14 @@ exports.generateCode = functions.https.onRequest(async (request, response) => {
         return
     }
 
-    var code = genCode()
-    var snapshot = await admin.database().ref().child(code).set(request.query.link)
+    console.log('generateCode will start now')
+
+    var code = utils.getRandomID()
+    
+    ref.child(code).set(request.query.link)
 
     response.json({
         'code': code,
-        'link': snapshot.ref.toString()
+        'link': request.query.link
     })
 })
