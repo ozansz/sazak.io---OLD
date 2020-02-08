@@ -1,6 +1,8 @@
 const functions = require('firebase-functions');
 var admin = require('firebase-admin');
 
+const cors = require('cors')({origin: true});
+
 const utils = require('./utils')
 
 admin.initializeApp();
