@@ -12,6 +12,7 @@ var ref = db.ref('links')
 
 exports.retrieveLink = functions.https.onRequest((request, response) => {
     if (request.query.code === undefined) {
+        response.set('Access-Control-Allow-Origin', '*');
         response.json({
             'error': 'field',
             'extra': 'code'
@@ -19,15 +20,15 @@ exports.retrieveLink = functions.https.onRequest((request, response) => {
         return
     }
 
-    response.set('Access-Control-Allow-Origin', '*');
-
     ref.child(request.query.code).once('value', (snapshot) => {
         if (snapshot.exists()) {
+            response.set('Access-Control-Allow-Origin', '*');
             response.json({
                 'code': request.query.code,
                 'link': snapshot.val()
             })
         } else {
+            response.set('Access-Control-Allow-Origin', '*');
             response.json({
                 'error': 'notfound'
             })
@@ -37,6 +38,7 @@ exports.retrieveLink = functions.https.onRequest((request, response) => {
 
 exports.generateCode = functions.https.onRequest((request, response) => {
     if (request.query.link === undefined) {
+        response.set('Access-Control-Allow-Origin', '*');
         response.json({
             'error': 'field',
             'extra': 'link'
