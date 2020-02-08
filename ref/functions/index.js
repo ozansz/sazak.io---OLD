@@ -39,7 +39,9 @@ exports.retrieveLink = functions.https.onRequest((request, response) => {
                 'link': snapshot.val()
             })
         } else {
-            response.send(undefined)
+            response.json({
+                'error': 'notfound'
+            })
         }
     })
 })
